@@ -1,1 +1,1 @@
-###Creativ 👩‍🎨 - A Design Challenge Generator
+### Creativ - A Design Challenge Generator
