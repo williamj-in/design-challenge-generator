@@ -35,30 +35,66 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(1),
         textAlign: 'center',
         color: theme.palette.text.secondary,
-        whiteSpace: 'nowrap',
         marginBottom: theme.spacing(1),
         height: '100%',
+        backgroundColor: '#fafafa',
     },
     divider: {
         margin: theme.spacing(2, 0),
     },
 }));
+const highlightStyle = {
+    fontSize: '3rem',
+    fontWeight: '700',
+    textTransform: 'capitalize',
+};
+const containerStyle = {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '2rem',
+    backgroundColor: '#fbfbf8',
+    padding: '2rem 2rem',
+    borderLeft: '5px solid #3f50b5',
+    borderRadius: '5px',
+};
+const outlinedContainerStyle = {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '3rem',
+    // backgroundColor: '#efeeee',
+    padding: '0 20px',
+    // borderLeft: '5px solid #3f50b5',
+    borderRadius: '5px',
+};
 
 function App() {
     const initialNotes = [];
     const [notes, setNotes] = useState(JSON.parse(window.localStorage.getItem('notes')) || initialNotes);
     const classes = useStyles();
     const refresh = () => {
-        setNoun(nouns[Math.floor(Math.random() * nouns.length)].toUpperCase());
+        setNoun(nouns[Math.floor(Math.random() * nouns.length)]);
         setUser(users[Math.floor(Math.random() * users.length)]);
+        setValue('');
+        // setAutoFocus(true);
     };
+    const deleteNote = (id) => {
+        const newNotes = notes.filter((note) => note.id !== id);
+        console.log(newNotes);
+        setNotes(newNotes);
+        // window.localStorage.setItem('notes', JSON.stringify(notes));
+        // console.log(id);
+    }
     const save = (e) => {
+        if (value == null || value.trim() === '') {
+            setValue('');
+            return;
+        }
         e.preventDefault();
         const newNote = { id: uuid(), title: `Design a ${noun} for ${user}`, note: value };
         // const oldNotes = JSON.parse(window.localStorage.getItem('notes'));
         setNotes([...notes, newNote]);
         // window.localStorage.setItem('notes', JSON.stringify(notes));
-        console.log(notes);
+        // console.log(notes);
         setValue('');
         refresh();
     };
@@ -67,8 +103,9 @@ function App() {
         window.localStorage.setItem('notes', JSON.stringify(notes));
     });
 
-    const [noun, setNoun] = useState(nouns[Math.floor(Math.random() * nouns.length)].toUpperCase());
+    const [noun, setNoun] = useState(nouns[Math.floor(Math.random() * nouns.length)]);
     const [user, setUser] = useState(users[Math.floor(Math.random() * users.length)]);
+    const [autoFocus, setAutoFocus] = useState(true);
     const [value, setValue] = React.useState('');
 
     const handleChange = (event) => {
@@ -79,63 +116,66 @@ function App() {
             <HashRouter>
                 <Switch>
                     <Route
+                        
                         exact
                         path="/notes"
                         render={() => (
-                            <>
-                                <Notes notes={notes} />
-                            </>
+                        
+                                <Notes notes={notes} deleteNote={deleteNote} />
+                            
                         )}
                     />
                     <Route
+                        
                         exact
                         path="/"
                         render={() => (
-                            <Container style={{ padding: '2rem' }}>
-                                <Grid container spacing={3}>
-                                    <Grid item xs={4}>
-                                        <Paper className={classes.paper}>
-                                            <div
-                                                style={{
-                                                    padding: '2rem',
-                                                }}
-                                            >
-                                                <h1>Design a</h1>
-                                                <h1>{noun}</h1>
-                                                <h1>for</h1>
-                                                <h1>{user}</h1>
-                                            </div>
-                                            <Button variant="contained" color="primary" onClick={refresh}>
-                                                Get another one
-                                            </Button>
-                                        </Paper>
-                                    </Grid>
-                                    <Grid item xs={8}>
-                                        <Paper className={classes.paper}>
-                                            <TextField
-                                                id="filled-multiline-static"
-                                                label="Notes here..."
-                                                multiline
-                                                rows={30}
-                                                variant="filled"
-                                                fullWidth
-                                                onChange={handleChange}
-                                                value={value}
-                                                autoFocus
-                                            />
-                                            <div
-                                                style={{
-                                                    marginTop: 20,
-                                                    textAlign: 'right',
-                                                }}
-                                            >
-                                                <Button variant="contained" color="primary" onClick={save}>
-                                                    Save
-                                                </Button>
-                                            </div>
-                                        </Paper>
-                                    </Grid>
-                                </Grid>
+                            <Container style={{ padding: '1rem 2rem' }}>
+            <h1 style={{marginLeft: 20}}>Challenge</h1>
+
+                                <div style={outlinedContainerStyle}>
+                                    <p style={{ color: '#666', fontSize: '2rem', lineHeight: '3rem' }}>
+                                        Design a <span style={{ ...highlightStyle, color: '#ab003c' }}> {noun} </span>
+                                        for
+                                        <span style={{ ...highlightStyle, color: '#2c387e' }}> {user} </span>
+                                    </p>
+                                    <div>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={refresh}
+                                            style={{
+                                                top: 'auto',
+                                                marginBottom: 0,
+                                            }}
+                                        >
+                                            Get another one
+                                        </Button>
+                                    </div>
+                                </div>
+                                <div style={containerStyle}>
+                                    <TextField
+                                        id="outlined-multiline-static"
+                                        label="Notes here..."
+                                        multiline
+                                        rows={15}
+                                        // variant="outlined"
+                                        fullWidth
+                                        onChange={handleChange}
+                                        value={value}
+                                        autoFocus
+                                    />
+                                    <div
+                                        style={{
+                                            marginTop: 20,
+                                            textAlign: 'left',
+                                        }}
+                                    >
+                                        <Button variant="contained" color="primary" onClick={save}>
+                                            Save
+                                        </Button>
+                                    </div>
+                                </div>
                             </Container>
                         )}
                     />

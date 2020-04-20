@@ -43,6 +43,13 @@ const Footer = styled.div`
     bottom: 0;
 `;
 
+const activeStyle = {
+    backgroundColor: '#efeeee',
+    boxShadow: 'none',
+    borderTop: '3px solid #3f50b5',
+    fontWeight: 'bold',
+};
+
 export default function TinyFooter() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
@@ -50,16 +57,26 @@ export default function TinyFooter() {
         setValue(newValue);
     };
     return (
-
-        <AppBar position="fixed" className={classes.appBar} >
+        <AppBar position="fixed" className={classes.appBar}>
             <Footer>
-
-
-                        <Container>
-                            <NavLink exact to='/' style={{padding: '10px 0', borderRadius: '5px'}} activeStyle={{backgroundColor: '#2f3f9f', color: 'white'}}><Tab label="Creativ 👩‍🎨" /></NavLink>
-                            <NavLink exact to='/notes' style={{padding: '10px 0', borderRadius: '5px'}} activeStyle={{backgroundColor: '#2f3f9f', color: 'white'}}><Tab label="Notes 📝" /></NavLink>
-                        </Container>
-
+                <Container>
+                    <NavLink
+                        exact
+                        to="/"
+                        style={{ padding: '20px 0'}}
+                        activeStyle={activeStyle}
+                    >
+                        <Tab label="Creativ 👩‍🎨" />
+                    </NavLink>
+                    <NavLink
+                        exact
+                        to="/notes"
+                        style={{ padding: '20px 0'}}
+                        activeStyle={activeStyle}
+                    >
+                        <Tab label="Notes 📝" />
+                    </NavLink>
+                </Container>
             </Footer>
         </AppBar>
     );
