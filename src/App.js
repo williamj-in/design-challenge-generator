@@ -76,6 +76,8 @@ function App() {
         setNoun(nouns[Math.floor(Math.random() * nouns.length)]);
         setUser(users[Math.floor(Math.random() * users.length)]);
         setValue('');
+        inputEl.current.focus();
+
     };
     const deleteNote = (id) => {
         const newNotes = notes.filter((note) => note.id !== id);
@@ -96,7 +98,6 @@ function App() {
 
     useEffect(() => {
         window.localStorage.setItem('notes', JSON.stringify(notes));
-        inputEl.current.focus();
 
     });
 

@@ -3,8 +3,7 @@ import Container from '@material-ui/core/Container';
 import NoteCard from './NoteCard';
 
 export default function Notes(props) {
-    // const {notes} = props;
-    const notes = JSON.parse(window.localStorage.getItem('notes'));
+    const {notes} = props;
     return (
         <Container style={{ padding: '1rem 0 0 2rem' }}>
             <h1 style={{ marginLeft: 20 }}>Notes</h1>
