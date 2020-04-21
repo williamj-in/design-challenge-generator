@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import { nouns, users } from './Data';
@@ -68,6 +68,7 @@ const outlinedContainerStyle = {
 };
 
 function App() {
+    const inputEl = useRef(null);
     const initialNotes = [];
     const [notes, setNotes] = useState(JSON.parse(window.localStorage.getItem('notes')) || initialNotes);
     const classes = useStyles();
@@ -75,15 +76,11 @@ function App() {
         setNoun(nouns[Math.floor(Math.random() * nouns.length)]);
         setUser(users[Math.floor(Math.random() * users.length)]);
         setValue('');
-        // setAutoFocus(true);
     };
     const deleteNote = (id) => {
         const newNotes = notes.filter((note) => note.id !== id);
-        console.log(newNotes);
         setNotes(newNotes);
-        // window.localStorage.setItem('notes', JSON.stringify(notes));
-        // console.log(id);
-    }
+    };
     const save = (e) => {
         if (value == null || value.trim() === '') {
             setValue('');
@@ -91,16 +88,16 @@ function App() {
         }
         e.preventDefault();
         const newNote = { id: uuid(), title: `Design a ${noun} for ${user}`, note: value };
-        // const oldNotes = JSON.parse(window.localStorage.getItem('notes'));
         setNotes([...notes, newNote]);
-        // window.localStorage.setItem('notes', JSON.stringify(notes));
-        // console.log(notes);
         setValue('');
         refresh();
+
     };
 
     useEffect(() => {
         window.localStorage.setItem('notes', JSON.stringify(notes));
+        inputEl.current.focus();
+
     });
 
     const [noun, setNoun] = useState(nouns[Math.floor(Math.random() * nouns.length)]);
@@ -115,23 +112,13 @@ function App() {
         <div className="App">
             <HashRouter>
                 <Switch>
+                    <Route exact path="/notes" render={() => <Notes notes={notes} deleteNote={deleteNote} />} />
                     <Route
-                        
-                        exact
-                        path="/notes"
-                        render={() => (
-                        
-                                <Notes notes={notes} deleteNote={deleteNote} />
-                            
-                        )}
-                    />
-                    <Route
-                        
                         exact
                         path="/"
                         render={() => (
                             <Container style={{ padding: '1rem 2rem' }}>
-            <h1 style={{marginLeft: 20}}>Challenge</h1>
+                                <h1 style={{ marginLeft: 20 }}>Challenge</h1>
 
                                 <div style={outlinedContainerStyle}>
                                     <p style={{ color: '#666', fontSize: '2rem', lineHeight: '3rem' }}>
@@ -164,6 +151,7 @@ function App() {
                                         onChange={handleChange}
                                         value={value}
                                         autoFocus
+                                        inputRef={inputEl}
                                     />
                                     <div
                                         style={{
